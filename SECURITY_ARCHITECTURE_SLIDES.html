@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowBuilder Enterprise Security & Network Architecture Slide Deck</title>
+  <!-- Google Sans Flex Font & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    body {
+      font-family: 'Google Sans Flex', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', Consolas, monospace;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .slide {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    }
+    .slide.active {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* Pulse animations */
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    .animate-glow {
+      animation: pulse-glow 3s infinite ease-in-out;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.4);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 h-full flex flex-col antialiased select-none overflow-hidden">
+
+  <!-- Header / Top Bar -->
+  <header class="h-16 border-b border-slate-800 bg-slate-900/90 backdrop-blur px-6 flex items-center justify-between shrink-0 z-20">
+    <div class="flex items-center gap-3">
+      <div class="size-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+        <span class="material-symbols-outlined text-white text-2xl">shield</span>
+      </div>
+      <div>
+        <h1 class="text-sm font-bold tracking-tight text-white flex items-center gap-2">
+          FlowBuilder Platform
+          <span class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">Banking Enterprise Security</span>
+        </h1>
+        <p class="text-xs text-slate-400">Kiến Trúc Phân Vùng Mạng, Quản Lý Khóa Mật Mã & Định Danh (IAM, KMS & Network Zones)</p>
+      </div>
+    </div>
+
+    <!-- Navigation Controls & View Modes -->
+    <div class="flex items-center gap-3">
+      <span id="slideIndicator" class="text-xs font-mono-code font-semibold px-3 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700/60">
+        01 / 08
+      </span>
+      <button onclick="prevSlide()" class="size-9 rounded-lg bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 flex items-center justify-center border border-slate-700 transition" title="Slide Trước (Phím ←)">
+        <span class="material-symbols-outlined text-xl">chevron_left</span>
+      </button>
+      <button onclick="nextSlide()" class="size-9 rounded-lg bg-blue-600 hover:bg-blue-500 active:scale-95 text-white flex items-center justify-center shadow-md shadow-blue-600/30 transition" title="Slide Tiếp (Phím →)">
+        <span class="material-symbols-outlined text-xl">chevron_right</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Slide Content Container -->
+  <main class="flex-1 overflow-y-auto relative p-4 md:p-8 flex items-center justify-center">
+
+    <!-- ========================================================================= -->
+    <!-- SLIDE 1: TỔNG QUAN HỆ SINH THÁI BẢO MẬT & 4 TRỤ CỘT                       -->
+    <!-- ========================================================================= -->
+    <section id="slide-1" class="slide active w-full max-w-6xl flex-col gap-6">
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-2 text-blue-400 text-xs font-bold uppercase tracking-widest">
+          <span class="material-symbols-outlined text-base">verified_user</span>
+          Tổng Quan Kiến Trúc
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">4 Trụ Cột An Toàn Mật Mã & Định Danh FlowBuilder</h2>
+        <p class="text-slate-400 text-sm">Hệ thống phân tầng khép kín, độc lập hoàn toàn và đáp ứng các tiêu chuẩn an ninh nghiêm ngặt nhất của Ngân hàng Nhà nước & PCI-DSS v4.0.</p>
+      </div>
+
+      <!-- 4 Core Pillars Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+        
+        <!-- Pillar 1 -->
+        <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-blue-500/40 transition group relative overflow-hidden">
+          <div class="size-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 transition duration-300">
+            <span class="material-symbols-outlined text-2xl">key</span>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">1. Định Danh Tự Chủ (Built-in IAM)</h3>
+          <ul class="text-xs text-slate-400 space-y-2">
+            <li class="flex items-start gap-1.5">
+              <span class="material-symbols-outlined text-emerald-400 text-sm shrink-0">check_circle</span>
+              <span>Xác thực Bearer Token (UUIDv4 128-bit entropy).</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <span class="material-symbols-outlined text-emerald-400 text-sm shrink-0">check_circle</span>
+              <span>Phiên làm việc phân tán trên Redis (TTL 24h).</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <span class="material-symbols-outlined text-emerald-400 text-sm shrink-0">check_circle</span>
+              <span>Thu hồi phiên lập tức khi Đăng xuất.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-amber-500/40 transition group relative overflow-hidden">
+          <div class="size-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 transition duration-300">
+            <span class="material-symbols-outlined text-2xl">security</span>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">2. Chống Dò Quét & 2FA</h3>
+          <ul class="text-xs text-slate-400 space-y-2">
+            <li class="flex items-start gap-1.5">
+              <span class="material-symbols-outlined text-emerald-400 text-sm shrink-0">check_circle</span>
+              <span>Rate Limit cửa sổ trượt (5 lần/User, 15 lần/IP).</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <span class="material-symbols-outlined text-emerald-400 text-sm shrink-0">check_circle</span>
+              <span>RFC 6238 TOTP 2FA (HMAC-SHA1 6 số).</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <span class="material-symbols-outlined text-emerald-400 text-sm shrink-0">check_circle</span>
+              <span>Chính sách Global Enforced 2FA & Reset khẩn cấp.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-purple-500/40 transition group relative overflow-hidden">
+          <div class="size-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-4 group-hover:scale-110 transition duration-300">
+            <span class="material-symbols-outlined text-2xl">lock</span>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">3. Quản Lý Khóa KMS</h3>
+          <ul class="text-xs text-slate-400 space-y-2">
+            <li class="flex items-start gap-1.5">
+              <span class="material-symbols-outlined text-emerald-400 text-sm shrink-0">check_circle</span>
+              <span>AES-256-GCM NIST SP 800-38D độ an toàn cao.</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <span class="material-symbols-outlined text-emerald-400 text-sm shrink-0">check_circle</span>
+              <span>Cô lập Master Key trong mạng nội bộ (:8766).</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <span class="material-symbols-outlined text-emerald-400 text-sm shrink-0">check_circle</span>
+              <span>Giải mã Just-In-Time trực tiếp trong RAM trạm chạy.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Pillar 4 -->
+        <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-emerald-500/40 transition group relative overflow-hidden">
+          <div class="size-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-4 group-hover:scale-110 transition duration-300">
+            <span class="material-symbols-outlined text-2xl">visibility_off</span>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">4. DLP & Kiểm Soát 4 Mắt</h3>
+          <ul class="text-xs text-slate-400 space-y-2">
+            <li class="flex items-start gap-1.5">
+              <span class="material-symbols-outlined text-emerald-400 text-sm shrink-0">check_circle</span>
+              <span>Dual Control chống tự duyệt kịch bản kiểm thử.</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <span class="material-symbols-outlined text-emerald-400 text-sm shrink-0">check_circle</span>
+              <span>DLP Masking số thẻ PCI-DSS & Secret trong Log.</span>
+            </li>
+            <li class="flex items-start gap-1.5">
+              <span class="material-symbols-outlined text-emerald-400 text-sm shrink-0">check_circle</span>
+              <span>Ghi vết 100% phiên trong bảng user_sessions.</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- High-Level Flow Chart Banner -->
+      <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between text-xs text-slate-300">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-blue-400">lan</span>
+          <span class="font-semibold text-white">Ranh Giới Bảo Mật Tuyệt Đối:</span>
+          <span>Cloud EC2 (Không giữ Master Key)</span>
+          <span class="material-symbols-outlined text-slate-600 text-sm">arrow_forward</span>
+          <span>Enterprise Firewall (Chặn 100% Inbound)</span>
+          <span class="material-symbols-outlined text-slate-600 text-sm">arrow_forward</span>
+          <span>Bank Intranet (Giữ Master Key & Core Banking)</span>
+        </div>
+        <div class="hidden md:flex items-center gap-2 text-emerald-400 font-semibold">
+          <span class="size-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Zero-Knowledge Storage
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SLIDE 2: SƠ ĐỒ KHỐI PHÂN VÙNG MẠNG (PUBLIC CLOUD VS BANK INTRANET)         -->
+    <!-- ========================================================================= -->
+    <section id="slide-2" class="slide w-full max-w-6xl flex-col gap-4">
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-2 text-blue-400 text-xs font-bold uppercase tracking-widest">
+          <span class="material-symbols-outlined text-base">hub</span>
+          Kiến Trúc Hạ Tầng Mạng & Phân Vùng An Ninh
+        </div>
+        <h2 class="text-xl md:text-2xl font-bold text-white tracking-tight">Sơ Đồ Tương Tác Giữa Các Khối: Public Cloud vs Bank Intranet</h2>
+      </div>
+
+      <!-- Main Diagram Container -->
+      <div class="w-full flex flex-col gap-3">
+        
+        <!-- 1. TOP BOX: PUBLIC ZONE (AWS EC2 CLOUD) -->
+        <div class="rounded-2xl border-2 border-blue-500/40 bg-blue-950/20 p-3.5 relative">
+          <!-- Zone Header Badge -->
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-600 text-white text-xs font-bold shadow-md mb-3">
+            <span class="material-symbols-outlined text-sm">cloud</span>
+            public-zone (10.10.xyz.xyz — AWS EC2 Cloud)
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            
+            <!-- Application Subnet -->
+            <div class="rounded-xl border border-blue-400/40 bg-slate-900/80 p-3 flex flex-col gap-2">
+              <div class="flex items-center gap-1.5 text-blue-300 text-xs font-bold">
+                <span class="material-symbols-outlined text-sm">lan</span>
+                application-subnet (10.10.50.xyz)
+              </div>
+              
+              <!-- Application Server Card -->
+              <div class="rounded-lg border border-amber-500/30 bg-slate-950/60 p-2.5 flex flex-col gap-2">
+                <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-bold w-fit">
+                  <span class="material-symbols-outlined text-xs">dns</span>
+                  application-server
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 text-[11px]">
+                  <!-- Frontend Container -->
+                  <div class="p-2 rounded-lg bg-slate-900 border border-slate-800 flex flex-col gap-0.5 text-center">
+                    <div class="size-6 mx-auto rounded bg-amber-500/10 text-amber-400 flex items-center justify-center mb-1">
+                      <span class="material-symbols-outlined text-xs">web</span>
+                    </div>
+                    <span class="font-bold text-white truncate">frontend-container</span>
+                    <span class="text-[10px] text-amber-400 font-mono-code">Port 80 / 443</span>
+                    <span class="text-[9px] text-slate-400">Nginx SPA (Angular)</span>
+                    <span class="text-[9px] text-emerald-400 font-semibold">TLS 1.3 Ingress</span>
+                  </div>
+
+                  <!-- Gateway Container -->
+                  <div class="p-2 rounded-lg bg-slate-900 border border-slate-800 flex flex-col gap-0.5 text-center">
+                    <div class="size-6 mx-auto rounded bg-blue-500/10 text-blue-400 flex items-center justify-center mb-1">
+                      <span class="material-symbols-outlined text-xs">api</span>
+                    </div>
+                    <span class="font-bold text-white truncate">gateway-container</span>
+                    <span class="text-[10px] text-blue-400 font-mono-code">Port 9000 (API)</span>
+                    <span class="text-[9px] text-slate-400">Spring Boot Gateway</span>
+                    <span class="text-[9px] text-purple-400 font-semibold">Store %{cipher}%</span>
+                  </div>
+
+                  <!-- Backend Engine Container -->
+                  <div class="p-2 rounded-lg bg-slate-900 border border-slate-800 flex flex-col gap-0.5 text-center">
+                    <div class="size-6 mx-auto rounded bg-amber-500/10 text-amber-400 flex items-center justify-center mb-1">
+                      <span class="material-symbols-outlined text-xs">account_tree</span>
+                    </div>
+                    <span class="font-bold text-white truncate">backend-container</span>
+                    <span class="text-[10px] text-amber-400 font-mono-code">Engine / Worker</span>
+                    <span class="text-[9px] text-slate-400">Automation Engine</span>
+                    <span class="text-[9px] text-red-400 font-semibold">No Bank Secret</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Infra Subnet -->
+            <div class="rounded-xl border border-blue-400/40 bg-slate-900/80 p-3 flex flex-col gap-2">
+              <div class="flex items-center gap-1.5 text-blue-300 text-xs font-bold">
+                <span class="material-symbols-outlined text-sm">lan</span>
+                infra-subnet (10.10.70.xyz)
+              </div>
+
+              <!-- Infra Server Card -->
+              <div class="rounded-lg border border-amber-500/30 bg-slate-950/60 p-2.5 flex flex-col gap-2">
+                <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-bold w-fit">
+                  <span class="material-symbols-outlined text-xs">storage</span>
+                  infra-server (Internal Docker Network)
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                  <!-- Redis Container -->
+                  <div class="p-2 rounded-lg bg-slate-900 border border-slate-800 flex flex-col gap-0.5 text-center">
+                    <div class="size-6 mx-auto rounded bg-red-500/10 text-red-400 flex items-center justify-center mb-1">
+                      <span class="material-symbols-outlined text-xs">cached</span>
+                    </div>
+                    <span class="font-bold text-white truncate">redis-container</span>
+                    <span class="text-[10px] text-red-400 font-mono-code">Port 6379 (AUTH)</span>
+                    <span class="text-[9px] text-slate-400">Job Queue & Session</span>
+                    <span class="text-[9px] text-amber-400 font-semibold">NO HOST EXPOSE</span>
+                  </div>
+
+                  <!-- MySQL Container -->
+                  <div class="p-2 rounded-lg bg-slate-900 border border-slate-800 flex flex-col gap-0.5 text-center">
+                    <div class="size-6 mx-auto rounded bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-1">
+                      <span class="material-symbols-outlined text-xs">database</span>
+                    </div>
+                    <span class="font-bold text-white truncate">mysql-container</span>
+                    <span class="text-[10px] text-cyan-400 font-mono-code">Port 3306 (TLS)</span>
+                    <span class="text-[9px] text-slate-400">Zero-Knowledge DB</span>
+                    <span class="text-[9px] text-purple-400 font-semibold">Only %{cipher}%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 2. MIDDLE BARRIER: BANK ENTERPRISE FIREWALL -->
+        <div class="rounded-xl border-2 border-dashed border-red-500/70 bg-red-950/30 p-2.5 flex items-center justify-between px-4 text-xs">
+          <div class="flex items-center gap-2 text-red-300 font-bold">
+            <span class="material-symbols-outlined text-red-400 text-lg">verified_user</span>
+            BANK ENTERPRISE FIREWALL & ZERO-INBOUND BARRIER (Palo Alto / Fortinet / Checkpoint)
+          </div>
+          <div class="flex items-center gap-3 font-mono-code text-[11px]">
+            <span class="px-2 py-0.5 rounded bg-red-500/20 text-red-400 font-bold border border-red-500/30">INBOUND TỪ CLOUD: DENY ALL ⛔</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">OUTBOUND PRIVATE: ALLOW HTTPS 443 ✅</span>
+          </div>
+        </div>
+
+        <!-- 3. BOTTOM BOX: PRIVATE ZONE (BANK INTRANET) -->
+        <div class="rounded-2xl border-2 border-emerald-500/40 bg-emerald-950/20 p-3.5 relative">
+          <!-- Zone Header Badge -->
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-700 text-white text-xs font-bold shadow-md mb-3">
+            <span class="material-symbols-outlined text-sm">account_balance</span>
+            private-zone (Bank Intranet / On-Premises Network)
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+            
+            <!-- User Network -->
+            <div class="rounded-xl border border-pink-500/30 bg-slate-900/80 p-3 flex flex-col gap-2">
+              <div class="flex items-center gap-1.5 text-pink-300 text-xs font-bold">
+                <span class="material-symbols-outlined text-sm">person</span>
+                user-network (192.168.xyz.xyz)
+              </div>
+              <div class="rounded-lg border border-pink-500/20 bg-slate-950/60 p-2.5 flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-pink-400 text-2xl">desktop_windows</span>
+                  <div>
+                    <div class="text-xs font-bold text-white">Client (local-agent)</div>
+                    <div class="text-[10px] text-slate-400">QA Tester Workstation</div>
+                  </div>
+                </div>
+                <div class="text-[10px] text-slate-300 space-y-1 mt-1 border-t border-slate-800 pt-2">
+                  <div>• Browser: Soạn thảo Flow & Test</div>
+                  <div>• FlowBuilder Agent (127.0.0.1:8765)</div>
+                  <div class="text-emerald-400 font-semibold">↑ Outbound HTTPS ra Cloud Gateway</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Agent Subnet (KMS & Worker Runner) -->
+            <div class="rounded-xl border border-blue-500/30 bg-slate-900/80 p-3 flex flex-col gap-2">
+              <div class="flex items-center gap-1.5 text-blue-300 text-xs font-bold">
+                <span class="material-symbols-outlined text-sm">smart_toy</span>
+                agent-subnet (10.50.100.xyz)
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <!-- Agent Card -->
+                <div class="p-2 rounded-lg bg-slate-950/80 border border-amber-500/30 text-center">
+                  <span class="material-symbols-outlined text-amber-400 text-lg">terminal</span>
+                  <div class="text-xs font-bold text-white mt-1">Agent</div>
+                  <div class="text-[9px] text-slate-400">Worker Runner</div>
+                  <div class="text-[9px] text-amber-400 font-mono-code">10.50.100.10</div>
+                </div>
+                <!-- KMS / HSM Card -->
+                <div class="p-2 rounded-lg bg-slate-950/80 border border-emerald-500/30 text-center">
+                  <span class="material-symbols-outlined text-emerald-400 text-lg">vpn_key</span>
+                  <div class="text-xs font-bold text-white mt-1">KMS / HSM</div>
+                  <div class="text-[9px] text-emerald-400 font-mono-code">Port 8766 (LAN)</div>
+                  <div class="text-[9px] text-emerald-300 font-semibold">Hold Master Key</div>
+                </div>
+              </div>
+              <div class="p-2 rounded bg-slate-950 text-[10px] text-slate-300 border border-slate-800/80 space-y-0.5">
+                <div>• KMS nội bộ giữ Master Key duy nhất.</div>
+                <div>• Agent giải mã <span class="text-amber-300 font-mono-code">%{enc:...}%</span> vào RAM.</div>
+                <div>• Tự hủy RAM & DLP Masking trước khi gửi log.</div>
+              </div>
+            </div>
+
+            <!-- Core Subnet (SUT) -->
+            <div class="rounded-xl border border-purple-500/30 bg-slate-900/80 p-3 flex flex-col gap-2">
+              <div class="flex items-center gap-1.5 text-purple-300 text-xs font-bold">
+                <span class="material-symbols-outlined text-sm">security</span>
+                core-subnet (10.50.150.xyz)
+              </div>
+              <div class="rounded-lg border border-purple-500/20 bg-slate-950/60 p-2.5 flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-purple-400 text-2xl">dns</span>
+                  <div>
+                    <div class="text-xs font-bold text-white">Hệ Thống Ngân Hàng Mục Tiêu (SUT)</div>
+                    <div class="text-[10px] text-purple-400 font-mono-code">10.50.150.20</div>
+                  </div>
+                </div>
+                <div class="text-[10px] text-slate-300 space-y-1 mt-1 border-t border-slate-800 pt-2">
+                  <div>• Core Banking T24 (Transact)</div>
+                  <div>• Hệ Thống Thẻ Way4 / ATM Switching</div>
+                  <div>• Oracle / SQL Server DB Staging</div>
+                  <div class="text-emerald-400 font-semibold">🔒 Cô lập 100% khỏi mạng Internet</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SLIDE 3: LUỒNG DỮ LIỆU TƯƠNG TÁC END-TO-END (FLOW SIMULATOR)              -->
+    <!-- ========================================================================= -->
+    <section id="slide-3" class="slide w-full max-w-6xl flex-col gap-6">
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-2 text-blue-400 text-xs font-bold uppercase tracking-widest">
+          <span class="material-symbols-outlined text-base">sync_alt</span>
+          Luồng Tương Tác Giữa Các Khối
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Luồng Dữ Liệu Tương Tác Thời Gian Thực (End-to-End Data Pipeline)</h2>
+        <p class="text-slate-400 text-sm">Minh họa các bước tuần tự từ khi Kỹ sư QA kích hoạt chạy kịch bản đến khi lệnh được giải mã và gửi tới Core Banking.</p>
+      </div>
+
+      <!-- Step-by-Step Flow Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
+        
+        <!-- Step 1 -->
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col gap-2 relative">
+          <div class="size-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold text-sm">1</div>
+          <div class="font-bold text-white">Kích Hoạt Kiểm Thử</div>
+          <p class="text-slate-400 text-[11px]">QA bấm Chạy từ Browser. Request gửi lên Cloud Gateway qua HTTPS 443.</p>
+          <div class="mt-auto pt-2 border-t border-slate-800 text-[10px] text-blue-400 font-mono-code">POST /api/v1/jobs</div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col gap-2 relative">
+          <div class="size-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold text-sm">2</div>
+          <div class="font-bold text-white">Xếp Hàng Đợi (Queue)</div>
+          <p class="text-slate-400 text-[11px]">Gateway đẩy Task vào Redis Job Queue. Mọi tham số nhạy cảm là <span class="text-amber-300 font-mono-code">%{ciphertext}%</span>.</p>
+          <div class="mt-auto pt-2 border-t border-slate-800 text-[10px] text-amber-400 font-mono-code">Redis: job:queue</div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col gap-2 relative">
+          <div class="size-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-sm">3</div>
+          <div class="font-bold text-white">Agent Kéo Task Về LAN</div>
+          <p class="text-slate-400 text-[11px]">Local Agent chủ động kéo Task qua kết nối Outbound (Firewall không cần mở cổng Inbound).</p>
+          <div class="mt-auto pt-2 border-t border-slate-800 text-[10px] text-emerald-400 font-mono-code">Poll Job Message</div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col gap-2 relative">
+          <div class="size-7 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold text-sm">4</div>
+          <div class="font-bold text-white">Giải Mã JIT Qua KMS</div>
+          <p class="text-slate-400 text-[11px]">Agent gửi token sang KMS nội bộ (:8766). Plaintext nạp trực tiếp vào RAM tạm thời.</p>
+          <div class="mt-auto pt-2 border-t border-slate-800 text-[10px] text-purple-400 font-mono-code">POST /kms/decrypt</div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col gap-2 relative">
+          <div class="size-7 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-sm">5</div>
+          <div class="font-bold text-white">Thực Thi & DLP Masking</div>
+          <p class="text-slate-400 text-[11px]">Agent tương tác Core Banking, xóa sạch RAM và lọc che mờ log trước khi báo cáo kết quả.</p>
+          <div class="mt-auto pt-2 border-t border-slate-800 text-[10px] text-cyan-400 font-mono-code">DLP: 9704 12** **** 5678</div>
+        </div>
+
+      </div>
+
+      <!-- Security Guarantee Summary -->
+      <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between text-xs text-slate-300">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-emerald-400">lock_reset</span>
+          <span class="font-bold text-white">Cam Kết An Toàn:</span>
+          <span>Dữ liệu nhạy cảm chỉ tồn tại dưới dạng Plaintext trong RAM của Agent tại trạm kiểm thử nội bộ đúng lúc chạy, triệt tiêu mọi nguy cơ rò rỉ dữ liệu.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SLIDE 4: KIẾN TRÚC ĐỊNH DANH & XÁC THỰC BEARER TOKEN                       -->
+    <!-- ========================================================================= -->
+    <section id="slide-4" class="slide w-full max-w-6xl flex-col gap-6">
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-2 text-blue-400 text-xs font-bold uppercase tracking-widest">
+          <span class="material-symbols-outlined text-base">badge</span>
+          Thành Phần Hệ Thống 01
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Phân Hệ Xác Thực & Quản Lý Phiên Bearer Token</h2>
+        <p class="text-slate-400 text-sm">Cơ chế xác thực không phụ thuộc dịch vụ ngoài, độ trễ truy xuất phiên dưới 0.2ms qua Redis Session Store.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left: Components Box -->
+        <div class="lg:col-span-1 flex flex-col gap-3">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Các Thành Phần Chính</div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-start gap-3">
+            <span class="material-symbols-outlined text-blue-400 mt-0.5">fingerprint</span>
+            <div>
+              <div class="text-sm font-bold text-white">UUIDv4 Session Token</div>
+              <div class="text-xs text-slate-400 mt-0.5">Sinh ngẫu nhiên 128-bit entropy qua SecureRandom, triệt tiêu nguy cơ đoán mò.</div>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-start gap-3">
+            <span class="material-symbols-outlined text-amber-400 mt-0.5">speed</span>
+            <div>
+              <div class="text-sm font-bold text-white">Sliding Window Rate Limiter</div>
+              <div class="text-xs text-slate-400 mt-0.5">Chặn brute-force: Tối đa 5 lần sai/tài khoản, 15 lần sai/IP trong 60s.</div>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-start gap-3">
+            <span class="material-symbols-outlined text-emerald-400 mt-0.5">cached</span>
+            <div>
+              <div class="text-sm font-bold text-white">Redis Session Store (TTL 24h)</div>
+              <div class="text-xs text-slate-400 mt-0.5">Lưu trữ quyền hạn và thông tin người dùng, hỗ trợ thu hồi tức thì khi Logout.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Visual Diagram Box -->
+        <div class="lg:col-span-2 p-6 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Sơ Đồ Xác Thực Yêu Cầu (Request Verification Flow)</span>
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-mono-code border border-blue-500/20">Latency &lt; 0.2ms</span>
+          </div>
+
+          <!-- Flow Diagram Visual Nodes -->
+          <div class="grid grid-cols-4 gap-2 my-6 text-center text-xs">
+            <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col items-center gap-2">
+              <span class="material-symbols-outlined text-blue-400 text-2xl">devices</span>
+              <span class="font-bold text-white">1. Client / UI</span>
+              <span class="text-[10px] text-slate-400">Gửi Header Authorization: Bearer &lt;token&gt;</span>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col items-center gap-2">
+              <span class="material-symbols-outlined text-amber-400 text-2xl">filter_alt</span>
+              <span class="font-bold text-white">2. Token Filter</span>
+              <span class="text-[10px] text-slate-400">Bóc tách Bearer token trên Gateway</span>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col items-center gap-2">
+              <span class="material-symbols-outlined text-emerald-400 text-2xl">storage</span>
+              <span class="font-bold text-white">3. Redis Cache</span>
+              <span class="text-[10px] text-slate-400">Đọc key auth:session:&lt;token&gt;</span>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col items-center gap-2">
+              <span class="material-symbols-outlined text-purple-400 text-2xl">verified</span>
+              <span class="font-bold text-white">4. Controller</span>
+              <span class="text-[10px] text-slate-400">Nạp SecurityContext & thực thi API</span>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 text-xs text-slate-400 flex items-center justify-between">
+            <span class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-emerald-400">power_settings_new</span>
+              <span>Khi người dùng bấm <b>Đăng xuất</b>: Xóa key Redis lập tức vô hiệu hóa phiên trên toàn hệ thống.</span>
+            </span>
+            <span class="font-mono-code text-[11px] text-blue-400 font-semibold">POST /api/auth/logout</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SLIDE 5: RFC 6238 TOTP 2FA & MA TRẬN PHÂN QUYỀN RBAC                      -->
+    <!-- ========================================================================= -->
+    <section id="slide-5" class="slide w-full max-w-6xl flex-col gap-6">
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-2 text-blue-400 text-xs font-bold uppercase tracking-widest">
+          <span class="material-symbols-outlined text-base">admin_panel_settings</span>
+          Thành Phần Hệ Thống 02
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Xác Thực Đa Yếu Tố 2FA & Ma Trận Phân Quyền 2 Tầng</h2>
+        <p class="text-slate-400 text-sm">Bảo vệ tài khoản qua thuật toán TOTP chuẩn quốc tế và kiểm soát quyền hạn phân cấp Hệ thống & Dự án.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Left: 2FA Specifications -->
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col gap-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-amber-400 text-sm">pin</span>
+              Xác Thực Đa Yếu Tố (RFC 6238 TOTP)
+            </span>
+            <span class="text-[10px] font-mono-code px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">HMAC-SHA1</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60">
+              <div class="text-slate-400 font-medium">Độ dài mã OTP</div>
+              <div class="text-base font-bold text-white mt-1">6 Chữ Số (30s Step)</div>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60">
+              <div class="text-slate-400 font-medium">Dung sai trôi đồng hồ</div>
+              <div class="text-base font-bold text-emerald-400 mt-1">±1 Bước (±30s)</div>
+            </div>
+          </div>
+
+          <div class="text-xs text-slate-300 space-y-2 mt-1">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-blue-400 text-sm">person_outline</span>
+              <span><b>Self-Service 2FA:</b> Người dùng tự quét QR kích hoạt trong trang Profile cá nhân.</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-amber-400 text-sm">lock_reset</span>
+              <span><b>Global Enforce Mode:</b> Quản trị viên có thể bắt buộc bật 2FA toàn bộ tổ chức.</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-purple-400 text-sm">restart_alt</span>
+              <span><b>Emergency Reset:</b> Admin hỗ trợ reset 2FA an toàn khi người dùng mất điện thoại.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: 2-Tier RBAC & Dual Control -->
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col gap-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-purple-400 text-sm">supervised_user_circle</span>
+              Mô Hình Phân Quyền 2 Tầng (Enterprise RBAC)
+            </span>
+            <span class="text-[10px] font-mono-code px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">Dual Control</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60">
+              <div class="text-blue-400 font-bold flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs">domain</span>
+                Cấp Hệ Thống (System)
+              </div>
+              <div class="text-[11px] text-slate-300 mt-1 space-y-0.5">
+                <div>• Platform Admin</div>
+                <div>• Security Auditor</div>
+                <div>• IT Support / Infra</div>
+              </div>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60">
+              <div class="text-emerald-400 font-bold flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs">folder_open</span>
+                Cấp Dự Án (Project)
+              </div>
+              <div class="text-[11px] text-slate-300 mt-1 space-y-0.5">
+                <div>• Project Lead / Admin</div>
+                <div>• QA Lead / Approver</div>
+                <div>• Test Engineer / Dev</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dual Control Callout -->
+          <div class="p-3 rounded-xl bg-red-950/30 border border-red-800/40 text-xs text-red-200 flex items-start gap-2.5">
+            <span class="material-symbols-outlined text-red-400 mt-0.5">policy</span>
+            <div>
+              <span class="font-bold text-white">Nguyên Tắc Kiểm Soát 4 Mắt (Anti Self-Approval):</span>
+              <p class="text-[11px] text-slate-300 mt-0.5">Hệ thống chặn tuyệt đối người tạo/chỉnh sửa kịch bản tự phê duyệt chính mình (bắt buộc phải do QA Lead hoặc Approver độc lập thẩm định).</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SLIDE 6: PHÂN HỆ QUẢN LÝ KHÓA MẬT MÃ KMS & JIT DECRYPTION                -->
+    <!-- ========================================================================= -->
+    <section id="slide-6" class="slide w-full max-w-6xl flex-col gap-6">
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-2 text-blue-400 text-xs font-bold uppercase tracking-widest">
+          <span class="material-symbols-outlined text-base">key</span>
+          Thành Phần Hệ Thống 03
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Phân Hệ Quản Lý Khóa Mật Mã (KMS & Secret Shield)</h2>
+        <p class="text-slate-400 text-sm">Mã hóa AES-256-GCM toàn bộ dữ liệu tĩnh, cô lập Master Key sâu trong mạng ngân hàng và giải mã JIT trong RAM.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Pillar 1: Encryption Specs -->
+        <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col gap-2">
+          <div class="flex items-center gap-2 text-emerald-400 text-xs font-bold">
+            <span class="material-symbols-outlined text-base">lock</span>
+            Thuật Toán AES-256-GCM
+          </div>
+          <div class="text-xs text-slate-300 space-y-2 mt-1">
+            <p>• <b>Khóa 256-bit:</b> Phái sinh từ Master Key qua băm SHA-256.</p>
+            <p>• <b>12-Byte IV Ngẫu Nhiên:</b> Sinh mới cho từng token, chống phân tích mẫu bản mã.</p>
+            <p>• <b>16-Byte GCM Tag:</b> Xác thực toàn vẹn, chống can thiệp bản mã (Tamper-Proof).</p>
+          </div>
+          <div class="mt-auto p-2.5 rounded-lg bg-slate-950 font-mono-code text-[11px] text-blue-300 border border-slate-800">
+            %{[Base64(IV + Cipher + Tag)]}%
+          </div>
+        </div>
+
+        <!-- Pillar 2: Auto Filter Engine -->
+        <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col gap-2">
+          <div class="flex items-center gap-2 text-blue-400 text-xs font-bold">
+            <span class="material-symbols-outlined text-base">filter_center_focus</span>
+            KmsEncryptionFilterService
+          </div>
+          <div class="text-xs text-slate-300 space-y-2 mt-1">
+            <p>• <b>Quét Đệ Quy:</b> Duyệt tự động qua String, Map, List, JSON Tree (Jackson).</p>
+            <p>• <b>Batch Processing:</b> Gom mảng token nhạy cảm gửi mã hóa theo lô.</p>
+            <p>• <b>High Availability Fallback:</b> Tự động dùng AES-256 cục bộ nếu KMS bận.</p>
+          </div>
+          <div class="mt-auto p-2.5 rounded-lg bg-slate-950 font-mono-code text-[11px] text-emerald-400 border border-slate-800">
+            %{enc:raw}% ➔ %{cipher}%
+          </div>
+        </div>
+
+        <!-- Pillar 3: JIT Decryption -->
+        <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col gap-2">
+          <div class="flex items-center gap-2 text-purple-400 text-xs font-bold">
+            <span class="material-symbols-outlined text-base">memory</span>
+            Giải Mã JIT Trong RAM
+          </div>
+          <div class="text-xs text-slate-300 space-y-2 mt-1">
+            <p>• <b>Không Giải Mã Sớm:</b> Dữ liệu trên Redis/Cloud luôn là bản mã.</p>
+            <p>• <b>RAM Tạm Thời:</b> Plaintext chỉ tồn tại trong mili-giây tại tiến trình Worker.</p>
+            <p>• <b>Zero Disk Footprint:</b> Không bao giờ ghi Plaintext xuống ổ đĩa hay file swap.</p>
+          </div>
+          <div class="mt-auto p-2.5 rounded-lg bg-slate-950 font-mono-code text-[11px] text-amber-300 border border-slate-800">
+            Port 8766 (Bank Internal KMS)
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Live Pipeline Visual Banner -->
+      <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between text-xs text-slate-300">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-amber-400">vpn_key</span>
+          <span class="font-semibold text-white">Cô Lập Khóa Hoàn Toàn:</span>
+          <span>Máy chủ Cloud EC2 chỉ lưu bản mã ➔ Mất DB cũng không lộ mật khẩu Core Banking.</span>
+        </div>
+        <div class="text-blue-400 font-mono-code text-[11px] font-semibold">
+          NIST SP 800-38D Compliant
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SLIDE 7: ĐỘNG CƠ DLP MASKING & BẢO VỆ NHẬT KÝ THỰC THI                     -->
+    <!-- ========================================================================= -->
+    <section id="slide-7" class="slide w-full max-w-6xl flex-col gap-6">
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-2 text-blue-400 text-xs font-bold uppercase tracking-widest">
+          <span class="material-symbols-outlined text-base">visibility_off</span>
+          Thành Phần Hệ Thống 04
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Động Cơ DLP Masking & Chống Thất Thoát Dữ Liệu</h2>
+        <p class="text-slate-400 text-sm">Tự động nhận diện và bọc mặt nạ bảo mật cho toàn bộ log thực thi, payload mạng và số thẻ ngân hàng.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Left: DLP Rules List -->
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col gap-3">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-blue-400 text-sm">rule</span>
+            6 Quy Tắc Làm Sạch Dữ Liệu Tự Động (Sanitization Rules)
+          </span>
+
+          <div class="space-y-2 text-xs">
+            <div class="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/50 flex items-center justify-between">
+              <span class="text-slate-300 font-medium">1. Token KMS (%{...}%)</span>
+              <span class="font-mono-code text-amber-400 font-bold">********</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/50 flex items-center justify-between">
+              <span class="text-slate-300 font-medium">2. Biến Môi Trường (${...}, {{...}})</span>
+              <span class="font-mono-code text-amber-400 font-bold">********</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/50 flex items-center justify-between">
+              <span class="text-slate-300 font-medium">3. JSON Keys (password, token, pin, secret, otp...)</span>
+              <span class="font-mono-code text-amber-400 font-bold">"pwd": "********"</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/50 flex items-center justify-between">
+              <span class="text-slate-300 font-medium">4. HTTP Auth Header (Authorization: Bearer ...)</span>
+              <span class="font-mono-code text-amber-400 font-bold">Bearer ********</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/50 flex items-center justify-between">
+              <span class="text-slate-300 font-medium">5. URL Query Secrets (?token=..., &key=...)</span>
+              <span class="font-mono-code text-amber-400 font-bold">?token=********</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/50 flex items-center justify-between">
+              <span class="text-slate-300 font-medium">6. Số Thẻ PCI-DSS PAN (Visa, Master, NAPAS 9704)</span>
+              <span class="font-mono-code text-emerald-400 font-bold">9704 12** **** 5678</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Interactive Live Masking Demo -->
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">So Sánh Dữ Liệu Trước & Sau Làm Sạch</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono-code border border-emerald-500/20">Auto Sanitized</span>
+            </div>
+
+            <div class="space-y-3">
+              <div>
+                <div class="text-[11px] font-bold text-red-400 mb-1 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">cancel</span>
+                  Log Thực Thi Gốc (Raw Log có chứa dữ liệu nhạy cảm):
+                </div>
+                <div class="p-3 rounded-lg bg-slate-950 font-mono-code text-[11px] text-red-300 border border-red-900/30 overflow-x-auto">
+                  HTTP POST /api/payment {"pan":"9704123456785678", "auth":"Bearer eyJhbGciOi...", "pin":"123456"}
+                </div>
+              </div>
+
+              <div>
+                <div class="text-[11px] font-bold text-emerald-400 mb-1 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">check_circle</span>
+                  Log Sau Khi Lọc Qua DLP Masker (Gửi về Web UI & Redis):
+                </div>
+                <div class="p-3 rounded-lg bg-slate-950 font-mono-code text-[11px] text-emerald-300 border border-emerald-900/30 overflow-x-auto">
+                  HTTP POST /api/payment {"pan":"9704 12** **** 5678", "auth":"Bearer ********", "pin":"********"}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-800/40 border border-slate-700/40 text-xs text-slate-300 flex items-center gap-2 mt-4">
+            <span class="material-symbols-outlined text-blue-400">terminal</span>
+            <span>Áp dụng đồng bộ tại <b>shared-go/masker</b> và <b>Angular LogMaskerService</b>.</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SLIDE 8: MA TRẬN ĐỐI CHIẾU TIÊU CHUẨN NGÂN HÀNG & PCI-DSS                -->
+    <!-- ========================================================================= -->
+    <section id="slide-8" class="slide w-full max-w-6xl flex-col gap-6">
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-2 text-blue-400 text-xs font-bold uppercase tracking-widest">
+          <span class="material-symbols-outlined text-base">fact_check</span>
+          Đối Chiếu Tuân Thủ
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Ma Trận Tuân Thủ Chuẩn Mực An Toàn Thông Tin</h2>
+        <p class="text-slate-400 text-sm">Đối chiếu với các quy chuẩn bảo mật ngân hàng của Ngân hàng Nhà nước Việt Nam, PCI-DSS v4.0 và ISO/IEC 27001.</p>
+      </div>
+
+      <!-- Compliance Table -->
+      <div class="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-950 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
+              <tr>
+                <th class="p-3.5 pl-5">Tiêu Chuẩn / Cơ Quan</th>
+                <th class="p-3.5">Điều Khoản</th>
+                <th class="p-3.5">Cơ Chế Đáp Ứng Của FlowBuilder</th>
+                <th class="p-3.5 pr-5 text-center">Đánh Giá</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 text-slate-300">
+              <tr class="hover:bg-slate-800/30 transition">
+                <td class="p-3.5 pl-5 font-bold text-white">Thông tư 09/2020/TT-NHNN</td>
+                <td class="p-3.5 text-blue-400 font-mono-code">Điều 15</td>
+                <td class="p-3.5">Xác thực Bearer Token kết hợp TOTP 2FA (RFC 6238), băm BCrypt.</td>
+                <td class="p-3.5 pr-5 text-center">
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20">TUÂN THỦ</span>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-800/30 transition">
+                <td class="p-3.5 pl-5 font-bold text-white">Thông tư 09/2020/TT-NHNN</td>
+                <td class="p-3.5 text-blue-400 font-mono-code">Điều 16, 17</td>
+                <td class="p-3.5">Máy chủ KMS nội bộ, mã hóa AES-256-GCM, cô lập Master Key và DLP Masking.</td>
+                <td class="p-3.5 pr-5 text-center">
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20">TUÂN THỦ</span>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-800/30 transition">
+                <td class="p-3.5 pl-5 font-bold text-white">PCI-DSS v4.0</td>
+                <td class="p-3.5 text-blue-400 font-mono-code">Req 3.4, 3.5</td>
+                <td class="p-3.5">Bảo vệ dữ liệu chủ thẻ lưu trữ, che mờ số thẻ PAN (9704 12** **** 5678).</td>
+                <td class="p-3.5 pr-5 text-center">
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20">TUÂN THỦ</span>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-800/30 transition">
+                <td class="p-3.5 pl-5 font-bold text-white">PCI-DSS v4.0</td>
+                <td class="p-3.5 text-blue-400 font-mono-code">Req 7, 8, 8.4</td>
+                <td class="p-3.5">Phân quyền 2 tầng RBAC, chống brute-force rate limit, bắt buộc MFA/2FA.</td>
+                <td class="p-3.5 pr-5 text-center">
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20">TUÂN THỦ</span>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-800/30 transition">
+                <td class="p-3.5 pl-5 font-bold text-white">ISO/IEC 27001:2022</td>
+                <td class="p-3.5 text-blue-400 font-mono-code">A.9.2, A.9.4</td>
+                <td class="p-3.5">Nguyên tắc kiểm soát 4 mắt (Dual Control) ngăn tự duyệt kịch bản kiểm thử.</td>
+                <td class="p-3.5 pr-5 text-center">
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20">TUÂN THỦ</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Footer Summary -->
+      <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between text-xs text-slate-400">
+        <div class="flex items-center gap-2 text-white">
+          <span class="material-symbols-outlined text-emerald-400">verified</span>
+          <span>Hệ thống đạt chuẩn sẵn sàng triển khai cho môi trường Kiểm thử Tự động Ngân hàng & Tổ chức Tài chính.</span>
+        </div>
+        <div class="font-mono-code text-slate-500 text-[11px]">
+          FB-SEC-2026-V2.1
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation / Slide Selector Tabs -->
+  <footer class="h-14 border-t border-slate-800 bg-slate-900/95 px-6 flex items-center justify-between shrink-0 z-20">
+    <div class="flex items-center gap-1.5 overflow-x-auto py-1">
+      <button onclick="goToSlide(0)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-medium transition text-white bg-blue-600 shadow-sm" data-slide="0">
+        1. Tổng Quan
+      </button>
+      <button onclick="goToSlide(1)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800" data-slide="1">
+        2. Phân Vùng Mạng
+      </button>
+      <button onclick="goToSlide(2)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800" data-slide="2">
+        3. Luồng Tương Tác
+      </button>
+      <button onclick="goToSlide(3)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800" data-slide="3">
+        4. Bearer Token
+      </button>
+      <button onclick="goToSlide(4)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800" data-slide="4">
+        5. 2FA & RBAC
+      </button>
+      <button onclick="goToSlide(5)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800" data-slide="5">
+        6. KMS Secret
+      </button>
+      <button onclick="goToSlide(6)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800" data-slide="6">
+        7. DLP Masking
+      </button>
+      <button onclick="goToSlide(7)" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800" data-slide="7">
+        8. Đối Chiếu
+      </button>
+    </div>
+
+    <div class="hidden md:flex items-center gap-3 text-xs text-slate-500">
+      <span>Dùng phím <b>←</b> / <b>→</b> hoặc click để chuyển Slide</span>
+    </div>
+  </footer>
+
+  <!-- Slide Navigation Script -->
+  <script>
+    let currentSlide = 0;
+    const totalSlides = 8;
+    const slides = document.querySelectorAll('.slide');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const indicator = document.getElementById('slideIndicator');
+
+    function updateSlide() {
+      slides.forEach((s, idx) => {
+        if (idx === currentSlide) {
+          s.classList.add('active');
+        } else {
+          s.classList.remove('active');
+        }
+      });
+
+      tabBtns.forEach((btn, idx) => {
+        if (idx === currentSlide) {
+          btn.className = 'tab-btn px-2.5 py-1 rounded-lg text-xs font-medium transition text-white bg-blue-600 shadow-sm';
+        } else {
+          btn.className = 'tab-btn px-2.5 py-1 rounded-lg text-xs font-medium transition text-slate-400 hover:text-white hover:bg-slate-800';
+        }
+      });
+
+      indicator.textContent = `0${currentSlide + 1} / 0${totalSlides}`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function goToSlide(idx) {
+      if (idx >= 0 && idx < totalSlides) {
+        currentSlide = idx;
+        updateSlide();
+      }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      }
+    });
+  </script>
+</body>
+</html>
